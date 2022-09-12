@@ -1,0 +1,6 @@
+﻿polars.testing.columns
+======================
+
+.. currentmodule:: polars.testing
+
+.. autofunction:: columns

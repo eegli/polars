@@ -1,0 +1,6 @@
+﻿polars.internals.series.string.StringNameSpace.count\_match
+===========================================================
+
+.. currentmodule:: polars.internals.series.string
+
+.. automethod:: StringNameSpace.count_match

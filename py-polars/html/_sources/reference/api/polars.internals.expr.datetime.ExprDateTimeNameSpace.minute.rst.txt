@@ -1,0 +1,6 @@
+﻿polars.internals.expr.datetime.ExprDateTimeNameSpace.minute
+===========================================================
+
+.. currentmodule:: polars.internals.expr.datetime
+
+.. automethod:: ExprDateTimeNameSpace.minute

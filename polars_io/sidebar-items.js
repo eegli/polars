@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":[["aggregations",""],["csv","(De)serializing CSV files"],["export",""],["ipc",""],["json","(De)serialize JSON files."],["mmap",""],["ndjson_core",""],["parquet","Reading Apache parquet files."],["predicates",""],["prelude",""]],"struct":[["RowCount",""]],"trait":[["ArrowReader",""],["SerReader",""],["SerWriter",""],["WriterFactory",""]]};

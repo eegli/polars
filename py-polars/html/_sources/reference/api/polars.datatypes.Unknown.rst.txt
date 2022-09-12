@@ -1,0 +1,23 @@
+﻿polars.datatypes.Unknown
+========================
+
+.. currentmodule:: polars.datatypes
+
+.. autoclass:: Unknown
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Unknown.__init__
+      ~Unknown.string_repr
+   
+   
+
+   
+   
+   

@@ -1,0 +1,6 @@
+﻿polars.internals.series.categorical.CatNameSpace.set\_ordering
+==============================================================
+
+.. currentmodule:: polars.internals.series.categorical
+
+.. automethod:: CatNameSpace.set_ordering

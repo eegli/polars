@@ -1,0 +1,6 @@
+﻿polars.internals.series.list.ListNameSpace.tail
+===============================================
+
+.. currentmodule:: polars.internals.series.list
+
+.. automethod:: ListNameSpace.tail

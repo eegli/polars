@@ -1,0 +1,6 @@
+﻿polars.internals.expr.string.ExprStringNameSpace.ends\_with
+===========================================================
+
+.. currentmodule:: polars.internals.expr.string
+
+.. automethod:: ExprStringNameSpace.ends_with

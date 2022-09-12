@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/simd-json-0.6.0/src/value.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>value.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script><script defer src="../../main.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../simd_json/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a><h2 class="location"></h2></nav><nav class="sidebar"><a class="sidebar-logo" href="../../simd_json/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div></a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../simd_json/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><button type="button">?</button></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+</pre><pre class="rust"><code><span class="doccomment">/// This module holds the two dom implementations we use. We distinguish between
+/// owned and borrowed. The difference being is that the borrowed value will
+/// use `&amp;str` as its string type, referencing the input, while owned will
+/// allocate a new String for each value.
+///
+/// Note that since json strings allow for for escape sequences the borrowed
+/// value does not implement zero copy parsing, it does however not allocate
+/// new memory for strings.
+///
+/// This differs notably from serde&#39;s zero copy implementation as, unlike serde,
+/// we do not require prior knowledge about string content to to take advantage
+/// of it.
+///
+/// ## Usage
+/// The value trait is meant to simplify interacting with DOM values, for both
+/// creation as well as mutation and inspection.
+///
+/// Objects can be treated as hashmap&#39;s for the most part
+/// ```rust
+/// use simd_json::{OwnedValue as Value, prelude::*};
+/// let mut v = Value::object();
+/// v.insert(&quot;key&quot;, 42);
+/// assert_eq!(v.get(&quot;key&quot;).unwrap(), &amp;42);
+/// assert_eq!(v[&quot;key&quot;], &amp;42);
+/// assert_eq!(v.remove(&quot;key&quot;).unwrap().unwrap(), 42);
+/// assert_eq!(v.get(&quot;key&quot;), None);
+/// ```
+///
+/// Arrays can be treated as vectors for the most part
+///
+/// ```rust
+/// use simd_json::{OwnedValue as Value, prelude::*};
+/// let mut v = Value::array();
+/// v.push(&quot;zero&quot;);
+/// v.push(1);
+/// assert_eq!(v[0], &amp;&quot;zero&quot;);
+/// assert_eq!(v.get_idx(1).unwrap(), &amp;1);
+/// assert_eq!(v.pop().unwrap().unwrap(), 1);
+/// assert_eq!(v.pop().unwrap().unwrap(), &quot;zero&quot;);
+/// assert_eq!(v.pop().unwrap(), None);
+/// ```
+///
+/// Nested changes are also possible:
+/// ```rust
+/// use simd_json::{OwnedValue as Value, prelude::*};
+/// let mut o = Value::object();
+/// o.insert(&quot;key&quot;, Value::array());
+/// o[&quot;key&quot;].push(Value::object());
+/// o[&quot;key&quot;][0].insert(&quot;other&quot;, &quot;value&quot;);
+/// assert_eq!(o.encode(), r#&quot;{&quot;key&quot;:[{&quot;other&quot;:&quot;value&quot;}]}&quot;#);
+/// ```
+
+/// Borrowed values, using Cow&#39;s for strings using in situ parsing strategies wherever possible
+</span><span class="kw">pub mod </span>borrowed;
+<span class="doccomment">/// Owned, lifetimeless version of the value for times when lifetimes are to be avoided
+</span><span class="kw">pub mod </span>owned;
+<span class="doccomment">/// Tape implementation
+</span><span class="kw">pub mod </span>tape;
+<span class="kw">pub use </span><span class="self">self</span>::borrowed::{
+    to_value <span class="kw">as </span>to_borrowed_value, to_value_with_buffers <span class="kw">as </span>to_borrowed_value_with_buffers,
+    Value <span class="kw">as </span>BorrowedValue,
+};
+<span class="kw">pub use </span><span class="self">self</span>::owned::{
+    to_value <span class="kw">as </span>to_owned_value, to_value_with_buffers <span class="kw">as </span>to_owned_value_with_buffers,
+    Value <span class="kw">as </span>OwnedValue,
+};
+<span class="kw">use </span><span class="kw">crate</span>::safer_unchecked::GetSaferUnchecked;
+<span class="kw">use crate</span>::{Deserializer, <span class="prelude-ty">Result</span>};
+<span class="kw">use </span>halfbrown::HashMap;
+<span class="kw">use </span>std::hash::Hash;
+<span class="kw">use </span>std::marker::PhantomData;
+<span class="kw">use </span>tape::Node;
+<span class="kw">pub use </span>value_trait::<span class="kw-2">*</span>;
+
+<span class="doccomment">/// Parses a slice of bytes into a Value dom. This function will
+/// rewrite the slice to de-escape strings.
+/// As we reference parts of the input slice the resulting dom
+/// has the same lifetime as the slice it was created from.
+///
+/// # Errors
+///
+/// Will return `Err` if `s` is invalid JSON.
+</span><span class="kw">pub fn </span>deserialize&lt;<span class="lifetime">&#39;de</span>, Value, Key&gt;(s: <span class="kw-2">&amp;</span><span class="lifetime">&#39;de </span><span class="kw-2">mut </span>[u8]) -&gt; <span class="prelude-ty">Result</span>&lt;Value&gt;
+<span class="kw">where
+    </span>Value: Builder&lt;<span class="lifetime">&#39;de</span>&gt; + From&lt;Vec&lt;Value&gt;&gt; + From&lt;HashMap&lt;Key, Value&gt;&gt; + <span class="lifetime">&#39;de</span>,
+    Key: Hash + Eq + From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;de </span>str&gt;,
+{
+    <span class="kw">match </span>Deserializer::from_slice(s) {
+        <span class="prelude-val">Ok</span>(de) =&gt; <span class="prelude-val">Ok</span>(ValueDeserializer::from_deserializer(de).parse()),
+        <span class="prelude-val">Err</span>(e) =&gt; <span class="prelude-val">Err</span>(e),
+    }
+}
+
+<span class="kw">struct </span>ValueDeserializer&lt;<span class="lifetime">&#39;de</span>, Value, Key&gt;
+<span class="kw">where
+    </span>Value: Builder&lt;<span class="lifetime">&#39;de</span>&gt; + From&lt;Vec&lt;Value&gt;&gt; + From&lt;HashMap&lt;Key, Value&gt;&gt; + <span class="lifetime">&#39;de</span>,
+    Key: Hash + Eq + From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;de </span>str&gt;,
+{
+    de: Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;,
+    _marker: PhantomData&lt;(Value, Key)&gt;,
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>, Value, Key&gt; ValueDeserializer&lt;<span class="lifetime">&#39;de</span>, Value, Key&gt;
+<span class="kw">where
+    </span>Value: Builder&lt;<span class="lifetime">&#39;de</span>&gt; + From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;de </span>str&gt; + From&lt;Vec&lt;Value&gt;&gt; + From&lt;HashMap&lt;Key, Value&gt;&gt; + <span class="lifetime">&#39;de</span>,
+    Key: Hash + Eq + From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;de </span>str&gt;,
+{
+    <span class="kw">pub fn </span>from_deserializer(de: Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            de,
+            _marker: PhantomData::default(),
+        }
+    }
+
+    <span class="attribute">#[cfg_attr(not(feature = <span class="string">&quot;no-inline&quot;</span>), inline(always))]
+    </span><span class="kw">pub fn </span>parse(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; Value {
+        <span class="kw">match unsafe </span>{ <span class="self">self</span>.de.next_() } {
+            Node::Static(s) =&gt; Value::from(s),
+            Node::String(s) =&gt; Value::from(s),
+            Node::Array(len, <span class="kw">_</span>) =&gt; <span class="self">self</span>.parse_array(len),
+            Node::Object(len, <span class="kw">_</span>) =&gt; <span class="self">self</span>.parse_map(len),
+        }
+    }
+
+    <span class="attribute">#[cfg_attr(not(feature = <span class="string">&quot;no-inline&quot;</span>), inline(always))]
+    #[allow(clippy::uninit_vec)]
+    </span><span class="kw">fn </span>parse_array(<span class="kw-2">&amp;mut </span><span class="self">self</span>, len: usize) -&gt; Value {
+        <span class="comment">// Rust doesn&#39;t optimize the normal loop away here
+        // so we write our own avoiding the length
+        // checks during push
+        </span><span class="kw">let </span><span class="kw-2">mut </span>res = Vec::with_capacity(len);
+        <span class="kw">unsafe </span>{
+            res.set_len(len);
+            <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..len {
+                std::ptr::write(res.get_kinda_unchecked_mut(i), <span class="self">self</span>.parse());
+            }
+        }
+        Value::from(res)
+    }
+
+    <span class="attribute">#[cfg_attr(not(feature = <span class="string">&quot;no-inline&quot;</span>), inline(always))]
+    </span><span class="kw">fn </span>parse_map(<span class="kw-2">&amp;mut </span><span class="self">self</span>, len: usize) -&gt; Value {
+        <span class="kw">let </span><span class="kw-2">mut </span>res: HashMap&lt;Key, Value&gt; = HashMap::with_capacity(len);
+
+        <span class="comment">// Since we checked if it&#39;s empty we know that we at least have one
+        // element so we eat this
+        </span><span class="kw">for _ in </span><span class="number">0</span>..len {
+            <span class="kw">if let </span>Node::String(key) = <span class="kw">unsafe </span>{ <span class="self">self</span>.de.next_() } {
+                res.insert_nocheck(key.into(), <span class="self">self</span>.parse());
+            } <span class="kw">else </span>{
+                <span class="macro">unreachable!</span>();
+            }
+        }
+        Value::from(res)
+    }
+}
+</code></pre></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="simd_json" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.65.0-nightly (c0941dfb5 2022-08-21)" ></div></body></html>

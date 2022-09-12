@@ -1,0 +1,6 @@
+﻿polars.internals.expr.string.ExprStringNameSpace.split\_exact
+=============================================================
+
+.. currentmodule:: polars.internals.expr.string
+
+.. automethod:: ExprStringNameSpace.split_exact

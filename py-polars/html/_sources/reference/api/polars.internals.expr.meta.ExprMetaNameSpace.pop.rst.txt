@@ -1,0 +1,6 @@
+﻿polars.internals.expr.meta.ExprMetaNameSpace.pop
+================================================
+
+.. currentmodule:: polars.internals.expr.meta
+
+.. automethod:: ExprMetaNameSpace.pop

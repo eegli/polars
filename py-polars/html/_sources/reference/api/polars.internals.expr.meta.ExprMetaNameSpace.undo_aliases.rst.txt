@@ -1,0 +1,6 @@
+﻿polars.internals.expr.meta.ExprMetaNameSpace.undo\_aliases
+==========================================================
+
+.. currentmodule:: polars.internals.expr.meta
+
+.. automethod:: ExprMetaNameSpace.undo_aliases

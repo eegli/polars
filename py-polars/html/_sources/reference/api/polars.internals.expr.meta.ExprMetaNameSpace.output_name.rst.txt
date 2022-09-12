@@ -1,0 +1,6 @@
+﻿polars.internals.expr.meta.ExprMetaNameSpace.output\_name
+=========================================================
+
+.. currentmodule:: polars.internals.expr.meta
+
+.. automethod:: ExprMetaNameSpace.output_name

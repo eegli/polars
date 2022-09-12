@@ -1,0 +1,6 @@
+﻿polars.internals.series.string.StringNameSpace.splitn
+=====================================================
+
+.. currentmodule:: polars.internals.series.string
+
+.. automethod:: StringNameSpace.splitn

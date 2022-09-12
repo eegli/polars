@@ -1,0 +1,6 @@
+﻿polars.internals.series.struct.StructNameSpace.rename\_fields
+=============================================================
+
+.. currentmodule:: polars.internals.series.struct
+
+.. automethod:: StructNameSpace.rename_fields
