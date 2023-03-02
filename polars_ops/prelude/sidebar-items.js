@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"trait":[["AsList",""],["AsUtf8",""],["ChunkedSet",""],["DataFrameOps",""],["IntoSeriesOps",""],["ListNameSpaceImpl",""],["RollingSeries",""],["SeriesMethods",""],["SeriesOps",""],["SeriesSealed",""],["ToDummies",""],["Utf8NameSpaceImpl",""]]};
+window.SIDEBAR_ITEMS = {"enum":["SearchSortedSide"],"fn":["floor_div_series","is_first","search_sorted"],"trait":["ArgAgg","DataFrameJoinOps","DataFrameOps","RollingSeries","SeriesMethods","SeriesSealed","ToDummies"]};

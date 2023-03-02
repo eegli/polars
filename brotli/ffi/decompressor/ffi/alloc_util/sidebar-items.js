@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":[["alloc_stdlib",""],["free_stdlib",""]],"struct":[["Box","A pointer type for heap allocation."],["MemoryBlock",""],["SubclassableAllocator",""]]};
+window.SIDEBAR_ITEMS = {"fn":["alloc_stdlib","free_stdlib"],"struct":["Box","MemoryBlock","SubclassableAllocator"]};
